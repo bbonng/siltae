@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026년 제1차 학교폭력 실태조사 안내 — 대구일중학교</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy2: #0F2040;
+    --blue: #1A4A8A;
+    --sky: #3B82F6;
+    --accent: #F59E0B;
+    --accent2: #EF4444;
+    --green: #10B981;
+    --white: #FFFFFF;
+    --gray: #94A3B8;
+    --light: #E2E8F0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #000;
+    overflow: hidden;
+    width: 100vw; height: 100vh;
+  }
+  #deck {
+    width: 100vw; height: 100vh;
+    position: relative; overflow: hidden;
+  }
+  .slide {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1);
+    transform: translateY(28px);
+    padding: 52px 72px;
+  }
+  .slide.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+  .slide.exit    { opacity: 0; transform: translateY(-28px); }
+
+  /* ── NAV ── */
+  #nav {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px;
+    z-index: 100;
+    background: rgba(10,22,40,0.88);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px; padding: 10px 24px;
+  }
+  #nav button {
+    background: none; border: none;
+    color: var(--gray); font-size: 18px; cursor: pointer;
+    padding: 4px 10px; border-radius: 20px; transition: all 0.2s;
+  }
+  #nav button:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+  #slide-counter {
+    font-size: 12px; color: var(--gray);
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 2px; min-width: 60px; text-align: center;
+  }
+  #progress-bar {
+    position: fixed; top: 0; left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--sky));
+    transition: width 0.5s ease; z-index: 100;
+    box-shadow: 0 0 14px var(--accent);
+  }
+  #dots {
+    position: fixed; right: 24px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s; cursor: pointer;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.6); box-shadow: 0 0 8px var(--accent); }
+
+  /* ── COMMON ── */
+  .label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .slide-title {
+    font-size: 52px; font-weight: 900;
+    color: var(--white); line-height: 1.1; margin-bottom: 32px;
+  }
+  .slide-title em { color: var(--sky); font-style: normal; }
+  .slide-header { width: 100%; }
+
+  /* ══════════════════════════════
+     SLIDE 1 — 표지 (오른쪽 정렬)
+  ══════════════════════════════ */
+  #s1 {
+    background: var(--navy);
+    padding: 0; align-items: flex-end;
+    overflow: hidden;
+  }
+  .s1-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 80% at 20% 50%, rgba(26,74,138,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 90% 80%, rgba(245,158,11,0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #0A1628 0%, #0F1E38 60%, #0A1628 100%);
+  }
+  .s1-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  /* 왼쪽 대형 숫자 장식 */
+  .s1-deco {
+    position: absolute; left: -20px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 420px; line-height: 0.85;
+    color: rgba(255,255,255,0.025);
+    letter-spacing: -20px; user-select: none;
+    pointer-events: none;
+  }
+  /* 오른쪽 정렬 콘텐츠 */
+  .s1-content {
+    position: relative; z-index: 2;
+    padding: 0 18% 0 60px;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-end;
+    text-align: right;
+  }
+  .s1-kicker {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 700;
+    letter-spacing: 5px; color: var(--accent);
+    margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 14px;
+  }
+  .s1-kicker::after {
+    content: ''; display: block;
+    width: 40px; height: 2px; background: var(--accent);
+  }
+  .s1-title {
+    font-weight: 900; font-size: 80px; line-height: 1.05;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .s1-title span { color: var(--sky); }
+  .s1-sub {
+    font-size: 20px; color: rgba(255,255,255,0.45);
+    font-weight: 300; margin-bottom: 48px; letter-spacing: 0.5px;
+  }
+  .s1-divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, var(--sky), var(--accent));
+    border-radius: 2px; margin-bottom: 28px;
+    margin-left: auto;
+  }
+  .s1-meta { display: flex; align-items: center; gap: 20px; justify-content: flex-end; }
+  .s1-school { font-size: 15px; color: var(--gray); font-weight: 400; letter-spacing: 1px; }
+  .s1-dot-sep { color: rgba(255,255,255,0.2); }
+  .s1-badge {
+    background: linear-gradient(135deg, var(--accent), #F97316);
+    color: #000; font-size: 12px; font-weight: 900;
+    padding: 7px 18px; border-radius: 20px;
+    letter-spacing: 1px; font-family: 'Montserrat', sans-serif;
+  }
+
+  /* ══════════════════════════════
+     SLIDE 2 — 왜 해야 하나 (TV 가독성 강화)
+  ══════════════════════════════ */
+  #s2 { background: #070E1A; align-items: stretch; }
+
+  .cards-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; width: 100%; flex: 1; }
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 18px; padding: 38px 34px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    border-radius: 18px 18px 0 0;
+  }
+  .card.blue::before  { background: linear-gradient(90deg, var(--sky), #60A5FA); }
+  .card.amber::before { background: linear-gradient(90deg, var(--accent), #F97316); }
+  .card.green::before { background: linear-gradient(90deg, var(--green), #34D399); }
+
+  .card-icon { font-size: 48px; margin-bottom: 18px; }
+  .card-label {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 2px; margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+  }
+  .card.blue .card-label  { color: var(--sky); }
+  .card.amber .card-label { color: var(--accent); }
+  .card.green .card-label { color: var(--green); }
+
+  .card-title { font-size: 26px; font-weight: 700; color: var(--white); margin-bottom: 16px; line-height: 1.2; }
+  .card-body  { font-size: 18px; color: rgba(255,255,255,0.72); line-height: 1.75; font-weight: 400; }
+
+  /* ══════════════════════════════
+     SLIDE 3 — 우리 학교가 한 일 (가독성 강화)
+  ══════════════════════════════ */
+  #s3 { background: var(--navy); align-items: stretch; overflow: hidden; }
+  .s3-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 90% 50%, rgba(59,130,246,0.08) 0%, transparent 60%);
+  }
+  .activity-list { display: flex; flex-direction: column; gap: 14px; width: 100%; flex: 1; }
+  .activity-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 22px 28px;
+    display: flex; align-items: center; gap: 22px;
+    position: relative; overflow: hidden;
+  }
+  .activity-item::after {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 4px;
+    border-radius: 14px 0 0 14px;
+  }
+  .activity-item:nth-child(1)::after { background: var(--sky); }
+  .activity-item:nth-child(2)::after { background: var(--accent); }
+  .activity-item:nth-child(3)::after { background: var(--green); }
+  .activity-item:nth-child(4)::after { background: #A78BFA; }
+
+  .activity-icon { font-size: 34px; flex-shrink: 0; }
+  .activity-info { flex: 1; }
+  .activity-title { font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 5px; }
+  .activity-detail { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.55; font-weight: 300; }
+
+  .activity-badge {
+    flex-shrink: 0; font-size: 12px; font-weight: 700;
+    padding: 6px 16px; border-radius: 20px;
+    font-family: 'Montserrat', sans-serif; letter-spacing: 1px;
+  }
+  .badge-blue   { background: rgba(59,130,246,0.15);  color: var(--sky);    border: 1px solid rgba(59,130,246,0.3); }
+  .badge-amber  { background: rgba(245,158,11,0.15);  color: var(--accent); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-green  { background: rgba(16,185,129,0.15);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+  .badge-purple { background: rgba(167,139,250,0.15); color: #A78BFA;       border: 1px solid rgba(167,139,250,0.3); }
+
+  .s3-cta {
+    margin-top: 14px; width: 100%;
+    background: rgba(245,158,11,0.08);
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 12px; padding: 18px 28px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .s3-cta-text { font-size: 18px; color: rgba(255,255,255,0.8); font-weight: 400; }
+  .s3-cta-text strong { color: var(--accent); }
+
+  /* ══════════════════════════════
+     SLIDE 4 — 자체해결제 (빈공간 채우기)
+  ══════════════════════════════ */
+  #s4 { background: #070E1A; align-items: stretch; }
+
+  .s4-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; width: 100%; flex: 1;
+  }
+  .s4-left { display: flex; flex-direction: column; gap: 16px; }
+  .s4-explainer {
+    background: rgba(59,130,246,0.06);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 16px; padding: 32px;
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .s4-explainer-title {
+    font-size: 16px; font-weight: 700; color: var(--sky);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+    letter-spacing: 0.5px;
+  }
+  .s4-explainer-body {
+    font-size: 19px; color: rgba(255,255,255,0.8);
+    line-height: 1.85; font-weight: 400; flex: 1;
+  }
+  .s4-explainer-body strong { color: var(--white); font-weight: 700; }
+
+  .s4-reminder {
+    margin-top: 20px; padding: 18px 22px;
+    background: rgba(245,158,11,0.08);
+    border-radius: 12px; border-left: 4px solid var(--accent);
+  }
+  .s4-reminder-text {
+    font-size: 17px; color: rgba(255,255,255,0.75);
+    line-height: 1.75;
+  }
+  .s4-reminder-text strong { color: var(--accent); }
+
+  /* 오른쪽: 문항 카드 3개가 꽉 차도록 */
+  .s4-right { display: flex; flex-direction: column; gap: 16px; }
+  .s4-q-label {
+    font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    color: var(--accent); font-family: 'Montserrat', sans-serif;
+    margin-bottom: 2px;
+  }
+  .s4-qcard {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px; padding: 26px 28px;
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .s4-qcard-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; color: rgba(59,130,246,0.18);
+    position: absolute; right: 20px; bottom: 10px;
+    line-height: 1; user-select: none;
+  }
+  .s4-qcard p {
+    font-size: 18px; color: rgba(255,255,255,0.88);
+    line-height: 1.7; font-weight: 400;
+  }
+  .s4-qcard p::before { content: 'Q. '; color: var(--sky); font-weight: 700; }
+
+  /* ══════════════════════════════
+     SLIDE 5 — 성실한 응답
+  ══════════════════════════════ */
+  #s5 { background: var(--navy); align-items: stretch; }
+  .compare-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; flex: 1; }
+  .compare-col {
+    background: rgba(255,255,255,0.02);
+    border-radius: 18px; padding: 34px;
+    display: flex; flex-direction: column;
+  }
+  .compare-col.bad  { border: 1px solid rgba(239,68,68,0.25); }
+  .compare-col.good { border: 1px solid rgba(16,185,129,0.25); background: rgba(16,185,129,0.03); }
+  .compare-header { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .compare-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; flex-shrink: 0;
+  }
+  .bad .compare-icon  { background: rgba(239,68,68,0.15); }
+  .good .compare-icon { background: rgba(16,185,129,0.15); }
+  .compare-header-text { font-size: 24px; font-weight: 700; }
+  .bad .compare-header-text  { color: #F87171; }
+  .good .compare-header-text { color: #34D399; }
+  .compare-items { display: flex; flex-direction: column; gap: 14px; flex: 1; }
+  .compare-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 18px; border-radius: 12px;
+  }
+  .bad .compare-item  { background: rgba(239,68,68,0.06); }
+  .good .compare-item { background: rgba(16,185,129,0.06); }
+  .citem-bullet {
+    width: 7px; height: 7px; border-radius: 50%;
+    flex-shrink: 0; margin-top: 9px;
+  }
+  .bad .citem-bullet  { background: #F87171; }
+  .good .citem-bullet { background: #34D399; }
+  .citem-text { font-size: 18px; color: rgba(255,255,255,0.82); line-height: 1.6; font-weight: 400; }
+
+  /* ══════════════════════════════
+     SLIDE 6 — 상황별 가이드
+  ══════════════════════════════ */
+  #s6 { background: #070E1A; align-items: stretch; }
+  .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; width: 100%; flex: 1; }
+  .qa-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 28px 30px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .qa-q {
+    font-size: 17px; color: rgba(255,255,255,0.58);
+    font-weight: 400; line-height: 1.55;
+    padding-left: 32px; position: relative;
+  }
+  .qa-q::before {
+    content: 'Q'; position: absolute; left: 0; top: -3px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: var(--sky); line-height: 1;
+  }
+  .qa-divider { height: 1px; background: rgba(255,255,255,0.07); }
+  .qa-a {
+    font-size: 19px; color: var(--white);
+    font-weight: 600; line-height: 1.6;
+    padding-left: 32px; position: relative;
+  }
+  .qa-a::before {
+    content: 'A'; position: absolute; left: 0; top: -3px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; color: var(--accent); line-height: 1;
+  }
+  .qa-a .highlight { color: var(--accent); font-weight: 700; }
+
+  /* ══════════════════════════════
+     SLIDE 7 — 참여 방법
+  ══════════════════════════════ */
+  #s7 { background: var(--navy); align-items: stretch; overflow: hidden; }
+  .s7-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(59,130,246,0.1) 0%, transparent 60%);
+  }
+  .steps-flow { display: flex; align-items: stretch; width: 100%; flex: 1; position: relative; z-index: 2; }
+  .step-block { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+  .step-block:not(:last-child)::after {
+    content: '▶'; position: absolute;
+    right: -13px; top: 50%; transform: translateY(-50%);
+    color: rgba(255,255,255,0.18); font-size: 20px; z-index: 2;
+  }
+  .step-inner {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 18px; padding: 32px 20px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; width: 88%; height: 100%; gap: 14px;
+  }
+  .step-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 3px; color: var(--accent);
+  }
+  .step-icon {
+    width: 70px; height: 70px; border-radius: 50%;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.25);
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+  }
+  .step-title { font-size: 21px; font-weight: 700; color: var(--white); }
+  .step-desc  { font-size: 16px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+  .step-desc strong { color: var(--sky); font-weight: 600; }
+  .s7-info-bar {
+    position: relative; z-index: 2; margin-top: 20px;
+    width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .info-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px; padding: 18px 26px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .info-pill-icon { font-size: 26px; }
+  .info-pill-text { font-size: 16px; color: var(--gray); }
+  .info-pill-text strong { color: var(--white); display: block; font-size: 17px; margin-bottom: 2px; }
+
+  /* ══════════════════════════════
+     SLIDE 8 — 비밀 보장
+  ══════════════════════════════ */
+  #s8 { background: #070E1A; overflow: hidden; }
+  .s8-center {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; gap: 28px; position: relative; z-index: 2;
+    max-width: 820px;
+  }
+  .lock-circle {
+    width: 130px; height: 130px; border-radius: 50%;
+    background: rgba(16,185,129,0.1);
+    border: 2px solid rgba(16,185,129,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 58px; position: relative;
+  }
+  .lock-ring {
+    position: absolute; inset: -14px; border-radius: 50%;
+    border: 1px solid rgba(16,185,129,0.15);
+    animation: pulse-ring 2s ease-in-out infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%       { transform: scale(1.08); opacity: 0.2; }
+  }
+  .s8-headline { font-size: 60px; font-weight: 900; color: var(--white); line-height: 1.1; }
+  .s8-headline span { color: #34D399; }
+  .s8-checks { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 680px; }
+  .s8-check {
+    display: flex; align-items: center; gap: 18px;
+    background: rgba(16,185,129,0.05);
+    border: 1px solid rgba(16,185,129,0.15);
+    border-radius: 14px; padding: 18px 26px;
+  }
+  .check-icon {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(16,185,129,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: #34D399; font-size: 15px; flex-shrink: 0; font-weight: 700;
+  }
+  .check-text { font-size: 18px; color: rgba(255,255,255,0.85); line-height: 1.5; font-weight: 400; }
+
+  /* ══════════════════════════════
+     SLIDE 9 — Q&A
+  ══════════════════════════════ */
+  #s9 { background: var(--navy); align-items: stretch; }
+  .faq-list { display: flex; flex-direction: column; gap: 14px; width: 100%; flex: 1; }
+  .faq-item {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px; padding: 22px 28px;
+    display: flex; gap: 22px; align-items: flex-start;
+  }
+  .faq-q-mark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; color: var(--sky); line-height: 1; flex-shrink: 0; width: 24px;
+  }
+  .faq-content { flex: 1; }
+  .faq-question { font-size: 19px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .faq-answer   { font-size: 17px; color: var(--gray); line-height: 1.65; font-weight: 300; }
+  .faq-answer strong { color: var(--accent); font-weight: 600; }
+
+  /* ══════════════════════════════
+     SLIDE 10 — 마무리
+  ══════════════════════════════ */
+  #s10 { background: var(--navy); overflow: hidden; }
+  .s10-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 50%, rgba(59,130,246,0.2) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 70% at 80% 30%, rgba(245,158,11,0.1) 0%, transparent 50%),
+      linear-gradient(135deg, #0A1628 0%, #0D1F3C 100%);
+  }
+  .s10-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .s10-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 20px; max-width: 960px; padding: 60px;
+  }
+  .s10-tag {
+    display: inline-block;
+    background: rgba(245,158,11,0.15);
+    border: 1px solid rgba(245,158,11,0.4);
+    color: var(--accent); font-size: 12px; font-weight: 700;
+    letter-spacing: 3px; padding: 5px 18px; border-radius: 20px;
+    font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+  }
+  .s10-big {
+    font-size: 108px; font-weight: 900; color: var(--white);
+    line-height: 1.0; letter-spacing: -4px;
+  }
+  .s10-big span { color: var(--sky); }
+  .s10-quote {
+    font-size: 22px; color: rgba(255,255,255,0.6);
+    font-weight: 300; line-height: 1.7; max-width: 720px;
+  }
+  .s10-quote strong { color: rgba(255,255,255,0.9); font-weight: 500; }
+  .s10-stars { display: flex; gap: 28px; margin-top: 8px; flex-wrap: wrap; justify-content: center; }
+  .s10-star-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; color: rgba(255,255,255,0.5);
+  }
+  .s10-star-item::before { content: '✦'; color: var(--accent); font-size: 12px; }
+  .s10-school {
+    margin-top: 14px; font-size: 14px;
+    color: rgba(255,255,255,0.22); letter-spacing: 2px;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  /* ── 입장 애니메이션 ── */
+  .slide.active .card,
+  .slide.active .activity-item,
+  .slide.active .compare-item,
+  .slide.active .qa-card,
+  .slide.active .step-inner,
+  .slide.active .faq-item,
+  .slide.active .s8-check {
+    animation: fadeUp 0.48s ease forwards; opacity: 0;
+  }
+  .slide.active .card:nth-child(1),       .slide.active .activity-item:nth-child(1),
+  .slide.active .compare-item:nth-child(1),.slide.active .qa-card:nth-child(1),
+  .slide.active .step-block:nth-child(1) .step-inner,
+  .slide.active .faq-item:nth-child(1),   .slide.active .s8-check:nth-child(1) { animation-delay: 0.08s; }
+
+  .slide.active .card:nth-child(2),       .slide.active .activity-item:nth-child(2),
+  .slide.active .compare-item:nth-child(2),.slide.active .qa-card:nth-child(2),
+  .slide.active .step-block:nth-child(2) .step-inner,
+  .slide.active .faq-item:nth-child(2),   .slide.active .s8-check:nth-child(2) { animation-delay: 0.18s; }
+
+  .slide.active .card:nth-child(3),       .slide.active .activity-item:nth-child(3),
+  .slide.active .compare-item:nth-child(3),.slide.active .qa-card:nth-child(3),
+  .slide.active .step-block:nth-child(3) .step-inner,
+  .slide.active .faq-item:nth-child(3),   .slide.active .s8-check:nth-child(3) { animation-delay: 0.28s; }
+
+  .slide.active .card:nth-child(4),       .slide.active .activity-item:nth-child(4),
+  .slide.active .compare-item:nth-child(4),.slide.active .qa-card:nth-child(4),
+  .slide.active .step-block:nth-child(4) .step-inner,
+  .slide.active .faq-item:nth-child(4) { animation-delay: 0.38s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #key-hint {
+    position: fixed; top: 18px; right: 20px;
+    font-size: 11px; color: rgba(255,255,255,0.14);
+    font-family: 'Montserrat', sans-serif; letter-spacing: 1px; z-index: 100;
+  }
+
+  /* ══════════════════════════════
+     SLIDE 7b — 중요사항 (기간 & 해결사안)
+  ══════════════════════════════ */
+  #s7b { background: #07080F; align-items: stretch; overflow: hidden; }
+  .s7b-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(239,68,68,0.07) 0%, transparent 65%);
+  }
+  .warn-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(239,68,68,0.12);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #F87171; font-size: 13px; font-weight: 700;
+    padding: 8px 22px; border-radius: 30px; margin-bottom: 16px;
+    font-family: 'Montserrat', sans-serif; letter-spacing: 2px; text-transform: uppercase;
+  }
+  .warn-slide-title { font-size: 52px; font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 32px; }
+  .warn-slide-title em { color: #F87171; font-style: normal; }
+  .warn-cards-2 {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; width: 100%; flex: 1; position: relative; z-index: 2;
+  }
+  .warn-card-b {
+    border-radius: 20px; padding: 36px 34px;
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .warn-card-b.period  { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.3); }
+  .warn-card-b.resolved{ background: rgba(59,130,246,0.06);  border: 1px solid rgba(59,130,246,0.3); }
+  .warn-card-b::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 5px; border-radius: 20px 20px 0 0;
+  }
+  .warn-card-b.period::before  { background: linear-gradient(90deg, var(--accent), #F97316); }
+  .warn-card-b.resolved::before{ background: linear-gradient(90deg, var(--sky), #60A5FA); }
+  .warn-card-icon-b { font-size: 44px; }
+  .warn-card-lbl {
+    font-size: 12px; font-weight: 700; letter-spacing: 3px;
+    font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+  }
+  .period  .warn-card-lbl { color: var(--accent); }
+  .resolved.warn-card-b .warn-card-lbl { color: var(--sky); }
+  .warn-card-main {
+    font-size: 30px; font-weight: 900; color: var(--white); line-height: 1.25;
+  }
+  .warn-card-points {
+    display: flex; flex-direction: column; gap: 8px; margin-top: 4px;
+  }
+  .warn-point {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 16px; color: rgba(255,255,255,0.68); line-height: 1.55;
+  }
+  .warn-point-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px;
+  }
+  .period  .warn-point-dot  { background: var(--accent); }
+  .resolved .warn-point-dot { background: var(--sky); }
+
+  /* ══════════════════════════════
+     SLIDE 7c — 나에 관한 이야기만
+  ══════════════════════════════ */
+  #s7c { background: #050508; overflow: hidden; }
+  .only-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 40%, rgba(59,130,246,0.13) 0%, transparent 58%),
+      radial-gradient(ellipse 45% 45% at 82% 78%, rgba(245,158,11,0.07) 0%, transparent 50%);
+  }
+  .only-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .only-super {
+    font-size: 18px; color: var(--gray); font-weight: 300;
+    letter-spacing: 6px; margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif; text-transform: uppercase;
+  }
+  .only-big {
+    font-size: 130px; font-weight: 900; color: var(--white);
+    line-height: 0.88; letter-spacing: -6px; margin-bottom: 38px;
+  }
+  .only-big span { color: var(--sky); }
+  .only-rule {
+    font-size: 24px; color: rgba(255,255,255,0.72);
+    font-weight: 400; line-height: 1.65; margin-bottom: 40px;
+  }
+  .only-rule strong { color: var(--white); font-weight: 700; }
+  .only-nopes {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center; margin-bottom: 42px;
+  }
+  .only-nope {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.22);
+    color: #F87171; font-size: 17px; font-weight: 500;
+    padding: 13px 26px; border-radius: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .only-nope::before { content: '✕'; font-weight: 900; font-size: 13px; }
+  .only-footer {
+    font-size: 17px; color: rgba(255,255,255,0.35);
+    font-weight: 300; line-height: 1.75; max-width: 680px;
+  }
+  .only-footer em { color: var(--accent); font-style: normal; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="dots"></div>
+<div id="key-hint">← → 키 또는 클릭으로 이동</div>
+
+<div id="deck">
+
+  <!-- ① 표지 -->
+  <div class="slide active" id="s1">
+    <div class="s1-bg"></div>
+    <div class="s1-grid"></div>
+    <div class="s1-deco">26</div>
+    <div class="s1-content">
+      <div class="s1-kicker">대구일중학교 생활안전부</div>
+      <div class="s1-title">2026년 제1차<br><span>학교폭력</span><br>실태조사 안내</div>
+      <div class="s1-sub">나의 정직한 응답이 안전한 학교를 만듭니다</div>
+      <div class="s1-divider"></div>
+      <div class="s1-meta">
+        <span class="s1-school">대구일중학교</span>
+        <span class="s1-dot-sep">·</span>
+        <span class="s1-school">2026학년도 1학기</span>
+        <span class="s1-badge">필수 참여</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 왜 해야 하나 -->
+  <div class="slide" id="s2">
+    <div class="slide-header">
+      <div class="label">조사의 목적</div>
+      <div class="slide-title">왜 이 조사를 <em>해야 하나요</em>?</div>
+    </div>
+    <div class="cards-3">
+      <div class="card blue">
+        <div class="card-icon">⚖️</div>
+        <div class="card-label">법적 근거</div>
+        <div class="card-title">국가 공식 조사입니다</div>
+        <div class="card-body">학교폭력예방법 제11조에 따라 매년 실시하는 공식 국가 통계 조사입니다. 모든 학생의 참여가 요구됩니다.</div>
+      </div>
+      <div class="card amber">
+        <div class="card-icon">📊</div>
+        <div class="card-label">2026년 변화</div>
+        <div class="card-title">입시와 직결됩니다</div>
+        <div class="card-body">2026년부터 학교폭력 조치 사항이 대학 입시에 필수 반영됩니다. 정확한 실태 파악이 더욱 중요해졌습니다.</div>
+      </div>
+      <div class="card green">
+        <div class="card-icon">🏫</div>
+        <div class="card-label">우리 학교</div>
+        <div class="card-title">더 안전한 학교를 위해</div>
+        <div class="card-body">여러분의 응답이 모여 학교 안전 수준을 보여줍니다. 모든 학생이 안심할 수 있는 환경을 만드는 근거가 됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 우리 학교가 한 일 -->
+  <div class="slide" id="s3">
+    <div class="s3-bg"></div>
+    <div class="slide-header" style="position:relative;z-index:2;">
+      <div class="label">응답 전 기억해주세요</div>
+      <div class="slide-title">우리 학교가 <em>이미 한 일</em>들입니다</div>
+    </div>
+    <div class="activity-list" style="position:relative;z-index:2;">
+      <div class="activity-item">
+        <div class="activity-icon">📚</div>
+        <div class="activity-info">
+          <div class="activity-title">학교폭력 예방 교육 — 수차례 실시</div>
+          <div class="activity-detail">법무부 강사 초청 (4.13) · 도박예방 치유원 (3.17) · 공감프로젝트 (4.7) · 담임·생활안전부장 생활지도</div>
+        </div>
+        <div class="activity-badge badge-blue">3회 이상</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🏢</div>
+        <div class="activity-info">
+          <div class="activity-title">생활안전부 상시 운영</div>
+          <div class="activity-detail">연중 상시 개방 — 언제든지 상담 가능합니다.</div>
+        </div>
+        <div class="activity-badge badge-amber">상시 운영</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">📢</div>
+        <div class="activity-info">
+          <div class="activity-title">예방 캠페인 및 교내 안내 활동</div>
+          <div class="activity-detail">학교폭력 예방 관련 교내 캠페인 및 지속적인 안내 활동으로 안전한 학교 문화를 만들어 왔습니다.</div>
+        </div>
+        <div class="activity-badge badge-green">교내 활동</div>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon">🤝</div>
+        <div class="activity-info">
+          <div class="activity-title">학교장 자체해결·화해 조정 제도 운영</div>
+          <div class="activity-detail">담임선생님·생활안전부를 통해 화해·자체해결된 사안은 설문 응답 대상에 포함되지 않습니다.</div>
+        </div>
+        <div class="activity-badge badge-purple">상시 운영</div>
+      </div>
+    </div>
+    <div class="s3-cta" style="position:relative;z-index:2;">
+      <span style="font-size:24px;">💡</span>
+      <span class="s3-cta-text">설문 응답 전, <strong>위 활동들을 잠깐 떠올리며</strong> 답변해 주세요.</span>
+    </div>
+  </div>
+
+  <!-- ④ 학교장 자체해결제 -->
+  <div class="slide" id="s4">
+    <div class="slide-header">
+      <div class="label">핵심 제도 안내</div>
+      <div class="slide-title">학교장 <em>자체해결제</em>란?</div>
+    </div>
+    <div class="s4-layout">
+      <div class="s4-left">
+        <div class="s4-explainer">
+          <div class="s4-explainer-title">💡 이 제도는 무엇인가요?</div>
+          <div class="s4-explainer-body">
+            사소한 갈등이나 분쟁을 <strong>법적 처벌이 아닌</strong>,<br>
+            학교 차원에서 <strong>교육적 방법으로 화해하고 해결</strong>하는 제도입니다.
+          </div>
+          <div class="s4-reminder">
+            <div class="s4-reminder-text">
+              ✔ 담임선생님·생활안전부를 통해 <strong>이미 화해한 경우</strong><br>
+              ✔ 자체해결로 <strong>처리가 완료된 경우</strong><br>
+              ✔ 이미 <strong>신고·접수된 경우</strong><br><br>
+              → 이런 사안은 이번 설문에서 <strong>응답하지 않아도 됩니다.</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="s4-right">
+        <div class="s4-q-label">📋 실제 설문에는 이런 문항이 나옵니다</div>
+        <div class="s4-qcard">
+          <div class="s4-qcard-num">01</div>
+          <p>우리 학교는 학교폭력 예방 교육을 충분히 실시하고 있다</p>
+        </div>
+        <div class="s4-qcard">
+          <div class="s4-qcard-num">02</div>
+          <p>우리 학교 선생님들은 학교폭력 문제를 해결하기 위해 노력하고 있다</p>
+        </div>
+        <div class="s4-qcard">
+          <div class="s4-qcard-num">03</div>
+          <p>우리 학교는 학교폭력 피해 학생을 잘 도와주고 있다</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 성실한 응답 -->
+  <div class="slide" id="s5">
+    <div class="slide-header">
+      <div class="label">응답 방법</div>
+      <div class="slide-title"><em>성실한 응답</em>, 이렇게 하세요</div>
+    </div>
+    <div class="compare-layout">
+      <div class="compare-col bad">
+        <div class="compare-header">
+          <div class="compare-icon">❌</div>
+          <div class="compare-header-text">이런 응답은 피하세요</div>
+        </div>
+        <div class="compare-items">
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">아무 생각 없이 '보통'만 클릭</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">기억이 안 난다고 전부 '모름' 선택</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">빨리 끝내려고 무작위로 응답</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">친구와 똑같이 맞춰서 응답</div></div>
+        </div>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-header">
+          <div class="compare-icon">✅</div>
+          <div class="compare-header-text">이렇게 응답하세요</div>
+        </div>
+        <div class="compare-items">
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">올해 받은 예방 교육을 떠올리며 응답</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">실제로 겪거나 목격한 대로 솔직하게</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">각 문항의 내용을 읽고 신중하게 선택</div></div>
+          <div class="compare-item"><div class="citem-bullet"></div><div class="citem-text">확실하지 않으면 가장 가까운 느낌으로</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ 상황별 가이드 -->
+  <div class="slide" id="s6">
+    <div class="slide-header">
+      <div class="label">응답 가이드</div>
+      <div class="slide-title">이럴 땐 <em>이렇게</em> 답하세요</div>
+    </div>
+    <div class="qa-grid">
+      <div class="qa-card">
+        <div class="qa-q">폭력이 나쁘다는 걸 배운 적 있나요?</div>
+        <div class="qa-divider"></div>
+        <div class="qa-a">올해 예방 교육을 받았다면 → <span class="highlight">'그렇다'</span></div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">선생님이 갈등 해결에 노력하나요?</div>
+        <div class="qa-divider"></div>
+        <div class="qa-a">상담·화해 권고를 한 번이라도 봤다면 → <span class="highlight">'그렇다'</span></div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">피해를 당하거나 목격했나요?</div>
+        <div class="qa-divider"></div>
+        <div class="qa-a"><span style="color:var(--gray);font-size:15px;font-weight:400;display:block;margin-bottom:8px;">★ 2025년 9월 이후의 경험만 해당됩니다</span>직접 피해를 당했거나 눈으로 목격했다면 → <span class="highlight">'예'</span>,&nbsp; 아니라면 → <span class="highlight" style="color:var(--green)">'아니오'</span><br><span style="color:var(--gray);font-size:14px;font-weight:400;">들은 이야기·소문은 해당되지 않습니다</span></div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">'보통이다'를 선택하고 싶을 때</div>
+        <div class="qa-divider"></div>
+        <div class="qa-a">긍정도 부정도 아닌 중간이라면 → <span class="highlight">'보통'</span> 선택 가능<br><span style="color:var(--gray);font-size:15px;">단, 아무 생각 없이 선택하지는 마세요.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑦ 참여 방법 -->
+  <div class="slide" id="s7">
+    <div class="s7-bg"></div>
+    <div class="slide-header" style="position:relative;z-index:2;">
+      <div class="label">참여 방법 및 일정</div>
+      <div class="slide-title">이렇게 <em>참여</em>하세요</div>
+    </div>
+    <div class="steps-flow">
+      <div class="step-block">
+        <div class="step-inner">
+          <div class="step-num">STEP 1</div>
+          <div class="step-icon">🔢</div>
+          <div class="step-title">인증번호 확인</div>
+          <div class="step-desc">담임 선생님께<br><strong>본인 인증번호</strong> 받기</div>
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-inner">
+          <div class="step-num">STEP 2</div>
+          <div class="step-icon">💻</div>
+          <div class="step-title">사이트 접속</div>
+          <div class="step-desc"><strong>survey.eduro.go.kr</strong><br>접속</div>
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-inner">
+          <div class="step-num">STEP 3</div>
+          <div class="step-icon">✍️</div>
+          <div class="step-title">설문 응답</div>
+          <div class="step-desc">성실하게<br>문항별 응답 완료</div>
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-inner">
+          <div class="step-num">STEP 4</div>
+          <div class="step-icon">✅</div>
+          <div class="step-title">제출 완료</div>
+          <div class="step-desc">최종 제출 후<br>완료 확인</div>
+        </div>
+      </div>
+    </div>
+    <div class="s7-info-bar">
+      <div class="info-pill">
+        <div class="info-pill-icon">📅</div>
+        <div class="info-pill-text">
+          <strong>참여 기간</strong>
+          4월 27일(금) 이후 ~ 주말 집중 참여
+        </div>
+      </div>
+      <div class="info-pill">
+        <div class="info-pill-icon">🌐</div>
+        <div class="info-pill-text">
+          <strong>참여 사이트</strong>
+          survey.eduro.go.kr · 스마트폰 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ 중요사항 — 조사 대상 범위 -->
+  <div class="slide" id="s7b">
+    <div class="s7b-bg"></div>
+    <div class="slide-header" style="position:relative;z-index:2;">
+      <div class="warn-badge">⚠ 응답 전 반드시 확인하세요</div>
+      <div class="warn-slide-title">이 경우만 <em>응답 대상</em>입니다</div>
+    </div>
+    <div class="warn-cards-2">
+      <div class="warn-card-b period">
+        <div class="warn-card-icon-b">📅</div>
+        <div class="warn-card-lbl">조사 기간</div>
+        <div class="warn-card-main">2025년 2학기<br>(9월 이후)<br>~ 지금까지</div>
+        <div class="warn-card-points">
+          <div class="warn-point"><div class="warn-point-dot"></div>올해 9월부터 지금까지의 경험만 해당됩니다</div>
+          <div class="warn-point"><div class="warn-point-dot"></div>그 이전의 일은 이번 조사 대상이 아닙니다</div>
+          <div class="warn-point"><div class="warn-point-dot"></div>기간 밖의 사안은 응답하지 않아도 됩니다</div>
+        </div>
+      </div>
+      <div class="warn-card-b resolved">
+        <div class="warn-card-icon-b">🤝</div>
+        <div class="warn-card-lbl" style="color:var(--sky)">해결된 사안</div>
+        <div class="warn-card-main">이미 처리된 사항은<br>응답하지 마세요</div>
+        <div class="warn-card-points">
+          <div class="warn-point"><div class="warn-point-dot" style="background:var(--sky)"></div>화해·조정이 이루어진 경우</div>
+          <div class="warn-point"><div class="warn-point-dot" style="background:var(--sky)"></div>자체해결로 처리가 완료된 경우</div>
+          <div class="warn-point"><div class="warn-point-dot" style="background:var(--sky)"></div>이미 신고·접수되어 처리 중인 경우</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑨ 나에 관한 이야기만 -->
+  <div class="slide" id="s7c">
+    <div class="only-bg"></div>
+    <div class="only-content">
+      <div class="only-super">이 설문은</div>
+      <div class="only-big"><span>나</span>의<br>이야기만</div>
+      <div class="only-rule"><strong>내가 직접 겪었거나</strong>, 내 눈으로 직접 목격한 일만 응답하세요</div>
+      <div class="only-nopes">
+        <div class="only-nope">친구한테 들은 이야기</div>
+        <div class="only-nope">누가 당했다는 소문</div>
+        <div class="only-nope">남의 일, 남의 경험</div>
+      </div>
+      <div class="only-footer">들은 이야기·소문을 응답하면 <em>통계가 왜곡</em>되어<br>실제로 도움이 필요한 학생을 찾는 데 방해가 됩니다</div>
+    </div>
+  </div>
+
+  <!-- ⑩ 비밀 보장 -->
+  <div class="slide" id="s8">
+    <div class="s8-center">
+      <div class="lock-circle">🔒<div class="lock-ring"></div></div>
+      <div class="s8-headline">여러분의 비밀은<br><span>철저히 보호</span>됩니다</div>
+      <div class="s8-checks">
+        <div class="s8-check">
+          <div class="check-icon">✓</div>
+          <div class="check-text">통계법 제33조에 따라 <strong style="color:#34D399">법적으로 보호</strong>됩니다</div>
+        </div>
+        <div class="s8-check">
+          <div class="check-icon">✓</div>
+          <div class="check-text">담임·교장 선생님도 <strong style="color:#34D399">개별 응답 내용을 알 수 없습니다</strong></div>
+        </div>
+        <div class="s8-check">
+          <div class="check-icon">✓</div>
+          <div class="check-text">오직 전체 통계로만 활용 — <strong style="color:#34D399">개인 식별 불가</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑪ Q&A -->
+  <div class="slide" id="s9">
+    <div class="slide-header">
+      <div class="label">자주 묻는 질문</div>
+      <div class="slide-title"><em>Q&A</em></div>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-content">
+          <div class="faq-question">안 하면 어떻게 되나요?</div>
+          <div class="faq-answer">참여 여부는 담임 선생님이 확인합니다. 전원 참여를 목표로 하며, 학교 통계에 영향을 줍니다.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-content">
+          <div class="faq-question">스마트폰으로 해도 되나요?</div>
+          <div class="faq-answer">네, 가능합니다. 스마트폰, 태블릿, PC 모두 접속 가능합니다.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-content">
+          <div class="faq-question">인증번호를 잃어버렸어요.</div>
+          <div class="faq-answer">담임 선생님께 문의하시면 확인해 드립니다. 별도 조회 방법도 안내 예정입니다.</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q-mark">Q</div>
+        <div class="faq-content">
+          <div class="faq-question">솔직하게 안 좋게 답하면 학교에 불이익이 오나요?</div>
+          <div class="faq-answer"><strong>아무 상관이 없습니다.</strong> 사실대로 응답하는 것이 가장 중요합니다. 부정적 응답도 학교 개선의 소중한 근거가 됩니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑫ 마무리 -->
+  <div class="slide" id="s10">
+    <div class="s10-bg"></div>
+    <div class="s10-grid"></div>
+    <div class="s10-content">
+      <div class="s10-tag">마무리</div>
+      <div class="s10-big">정직이<br><span>실력</span>입니다</div>
+      <div class="s10-quote"><strong>"여러분의 한 표가 대구일중학교의 안전을 만듭니다"</strong></div>
+      <div class="s10-stars">
+        <div class="s10-star-item">장난이나 허위 응답은 금물입니다</div>
+        <div class="s10-star-item">본인이 겪고 느낀 그대로를 명확하게</div>
+        <div class="s10-star-item">여러분의 응답이 더 안전한 학교를 만듭니다</div>
+      </div>
+      <div class="s10-school">대구일중학교 생활안전부 · 2026</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div id="nav">
+  <button onclick="changeSlide(-1)">◀</button>
+  <div id="slide-counter">1 / 12</div>
+  <button onclick="changeSlide(1)">▶</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total  = slides.length;
+  let cur = 0;
+
+  const dotsEl = document.getElementById('dots');
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(idx) {
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    const prev = cur;
+    setTimeout(() => slides[prev].classList.remove('exit'), 600);
+    cur = (idx + total) % total;
+    slides[cur].classList.add('active');
+    const pct = ((cur + 1) / total * 100).toFixed(1);
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('slide-counter').textContent = (cur + 1) + ' / ' + total;
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  }
+
+  function changeSlide(dir) { goTo(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); changeSlide(-1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(total - 1); }
+  });
+
+  document.getElementById('deck').addEventListener('click', e => {
+    if (!e.target.closest('#nav')) changeSlide(1);
+  });
+
+  document.getElementById('progress-bar').style.width = (1 / total * 100).toFixed(1) + '%';
+</script>
+</body>
+</html>
